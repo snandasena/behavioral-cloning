@@ -1,0 +1,8 @@
+tensorflow-cpu
+matplotlib
+numpy
+opencv-python
+flask
+eventlet
+keras
+socketio
