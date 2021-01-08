@@ -1,2 +1,3 @@
 https://www.freecodecamp.org/news/recognizing-traffic-lights-with-deep-learning-23dae23287cc/#.linb6gh1d
 https://github.com/jeremy-shannon/CarND-Behavioral-Cloning-Project
+https://developer.nvidia.com/blog/deep-learning-self-driving-cars/
