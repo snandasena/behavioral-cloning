@@ -6,9 +6,6 @@ import cv2
 learning_rate = 1e-4
 
 
-def image_processing_pipeline(img):
-    pass
-
 def load_darta(args):
     pass
 
