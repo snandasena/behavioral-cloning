@@ -1,8 +1,12 @@
 # Import dependencies
 import os
+import pickle
+
 import cv2
 import matplotlib.image as mpimg
 import numpy as np
+import pandas as pd
+from tqdm.contrib import tzip
 
 # Image common params
 i_height, i_width, i_channels = 66, 200, 3
@@ -11,6 +15,16 @@ img_shape = (i_height, i_width, i_channels)
 # Dataset common params
 data_dir = './data/data/'
 meta_file = data_dir + 'driving_log.csv'
+input_cols = ['center', 'left', 'right']
+output_col = 'steering'
+sample_per_image = 1
+
+meta_df = pd.read_csv(meta_file)
+X = meta_df[input_cols].values
+y = meta_df[output_col].values
+
+X_train = np.empty([sample_per_image * len(X) * 3, i_height, i_width, i_channels], dtype=np.float32)
+y_train = np.empty(sample_per_image * len(y) * 3, dtype=np.float32)
 
 
 # Load an image
@@ -147,47 +161,52 @@ def augment(img, streering_angle, range_x=100, range_y=10):
     return img, streering_angle
 
 
-# select random images
-def select_random_image(center, left, right, streering_angle):
+def load_and_agment(idx, iamge_path, streering_angle):
     """
-    Selecting an image for augmentation
+            X_train = np.concatenate((X_train, x), axis=0)
+            y_train = np.concatenate((y_train, y), axis=0)
     """
-    choise = np.random.randint(3)
-    if choise == 0:
-        return load_image(left), streering_angle + 0.2
-    elif choise == 1:
-        return load_image(right), streering_angle - 0.2
+    img = load_image(iamge_path)
+    procced_img = preprocess(img)
+    X_train[idx] = procced_img
+    y_train[idx] = streering_angle
+    # np.concatenate((X_train, [procced_img]), axis=0)
+    # np.concatenate((y_train, [streering_angle]), axis=0)
+    idx += 1
+    for i in range(sample_per_image - 1):
+        st_a = streering_angle
+        aug, st_a = augment(img, st_a)
+        # np.concatenate((X_train, [aug]), axis=0)
+        # np.concatenate((y_train, [st_a]), axis=0)
+        X_train[idx] = aug
+        y_train[idx] = st_a
+        idx += 1
 
-    return load_image(center), streering_angle
+    return idx
 
 
-# Generate augmentation batch
-def generate_batch(image_paths, streering_angles, batch_size, is_training):
+def image_data_augmentation(image_paths, streering_angles):
     """
-    Generate training image give image paths and associated steering angles
+
     """
-    images = np.empty([batch_size, i_height, i_width, i_channels])
-    streerings = np.empty(batch_size)
+    idx = 0
+    for image_path, streering_angle in tzip(image_paths, streering_angles):
+        for i, path in enumerate(image_path):
+            if i == 1:
+                streering_angle += 0.2
+            elif i == 2:
+                streering_angle -= 0.2
 
-    while True:
-        i = 0
-        for idx in np.random.permutation(image_paths.shape[0]):
-            center, left, right = image_paths[idx]
-            steering_angle = streering_angles[idx]
+            idx = load_and_agment(idx, path, streering_angle)
 
-            if is_training and np.random.rand() < 0.6:
-                img, steering_angle = select_random_image(center, left, right, steering_angle)
-                # Augmenting
-                img, steering_angle = augment(img, steering_angle)
-            else:
-                img = load_image(center)
-                img = preprocess(img)
 
-            images[i] = img
-            streerings[i] = steering_angle
-            i += 1
+if __name__ == '__main__':
+    image_data_augmentation(X, y)
 
-            if i == batch_size:
-                break
+    image_data = {
+        'X_train': X_train,
+        'y_train': y_train
+    }
 
-        yield images, streerings
+    with open("data/data.p", 'wb') as p:
+        pickle.dump(image_data, p, protocol=pickle.HIGHEST_PROTOCOL)
