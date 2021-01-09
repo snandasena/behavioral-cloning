@@ -57,7 +57,8 @@ def train_model(model, X_train, y_train):
     model.compile(loss='mse', optimizer=tf.optimizers.Adam(learning_rate), metrics=['accuracy'])
     print(model.summary())
 
-    model.fit(X_train, y_train,
+    model.fit(X_train,
+              y_train,
               epochs=epoches,
               validation_split=0.2,
               shuffle=True,
@@ -65,6 +66,7 @@ def train_model(model, X_train, y_train):
               use_multiprocessing=True,
               verbose=2)
 
+    model.save('model.h5')
 
 if __name__ == '__main__':
     X, y = load_data()

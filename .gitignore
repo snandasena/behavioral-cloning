@@ -131,3 +131,6 @@ dmypy.json
 data/
 data.zip
 .idea/
+models/
+
+model.h5
