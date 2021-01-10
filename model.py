@@ -54,7 +54,7 @@ def train_model(model, X_train, y_train):
         save_best_only='true',
         mode='auto')
 
-    model.compile(loss='mse', optimizer=tf.optimizers.Adam(learning_rate), metrics=['accuracy'])
+    model.compile(loss='mse', optimizer=tf.optimizers.Adam(learning_rate), metrics=['mean_squared_error'])
     print(model.summary())
 
     model.fit(X_train,
@@ -70,6 +70,5 @@ def train_model(model, X_train, y_train):
 
 if __name__ == '__main__':
     X, y = load_data()
-    # print(data)
     model = build_model()
     train_model(model, X, y)
