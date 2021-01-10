@@ -4,5 +4,4 @@ numpy
 opencv-python
 flask
 eventlet
-keras
-socketio
+python-socketio
