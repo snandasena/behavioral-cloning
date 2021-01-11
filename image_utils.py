@@ -17,7 +17,7 @@ data_dir = './data/data/'
 meta_file = data_dir + 'driving_log.csv'
 input_cols = ['center', 'left', 'right']
 output_col = 'steering'
-sample_per_image = 1
+sample_per_image = 2
 
 meta_df = pd.read_csv(meta_file)
 X = meta_df[input_cols].values
