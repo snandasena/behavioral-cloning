@@ -15,11 +15,14 @@ from io import BytesIO
 from tensorflow.keras.models import load_model
 import h5py
 from tensorflow.keras import __version__ as keras_version
+from image_utils import preprocess
 
 sio = socketio.Server()
 app = Flask(__name__)
 model = None
 prev_image_array = None
+
+import cv2
 
 
 class SimplePIController:
@@ -61,7 +64,10 @@ def telemetry(sid, data):
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
         image_array = np.asarray(image)
-        steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
+        image_array = preprocess(image_array)
+        print(image_array.shape)
+        image_array = np.asarray(image_array, dtype=np.float32)
+        steering_angle = float(model.predict(image_array[None,:,:,:])[0])
 
         throttle = controller.update(float(speed))
 
@@ -113,7 +119,8 @@ if __name__ == '__main__':
     # check that model Keras version is same as local Keras version
     f = h5py.File(args.model, mode='r')
     model_version = f.attrs.get('keras_version')
-    keras_version = str(keras_version).encode('utf8')
+    # keras_version = str(keras_version).encode('utf8')
+    # print(model_version, keras_version)
 
     if model_version != keras_version:
         print('You are using Keras version ', keras_version,

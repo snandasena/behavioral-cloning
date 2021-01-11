@@ -1,4 +1,5 @@
 import pickle
+
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -61,12 +62,14 @@ def train_model(model, X_train, y_train):
               y_train,
               epochs=epoches,
               validation_split=0.2,
+              batch_size=batch_size,
               shuffle=True,
               callbacks=[checkpoint],
               use_multiprocessing=True,
               verbose=2)
 
     model.save('model.h5')
+
 
 if __name__ == '__main__':
     X, y = load_data()
