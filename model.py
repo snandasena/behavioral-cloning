@@ -5,8 +5,8 @@ from tensorflow import keras
 from tensorflow.keras import layers
 
 learning_rate = 1e-4
-batch_size = 40
-epoches = 10
+batch_size = 115
+epoches = 40
 img_shape = (66, 200, 3)
 
 
@@ -39,7 +39,7 @@ def build_model():
             layers.Dense(100, activation='elu'),
             layers.Dense(50, activation='elu'),
             layers.Dense(10, activation='elu'),
-            layers.Dense(1),
+            layers.Dense(1)
         ])
 
     return model
