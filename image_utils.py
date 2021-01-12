@@ -17,14 +17,14 @@ data_dir = './data/data/'
 meta_file = data_dir + 'driving_log.csv'
 input_cols = ['center', 'left', 'right']
 output_col = 'steering'
-sample_per_image = 2
+# sample_per_image = 1
 
 meta_df = pd.read_csv(meta_file)
 X = meta_df[input_cols].values
 y = meta_df[output_col].values
 
-X_train = np.empty([sample_per_image * len(X) * 3, i_height, i_width, i_channels], dtype=np.float32)
-y_train = np.empty(sample_per_image * len(y) * 3, dtype=np.float32)
+X_train = np.empty([len(X) * 3, i_height, i_width, i_channels], dtype=np.float32)
+y_train = np.empty(len(y) * 3, dtype=np.float32)
 
 
 # Load an image
@@ -173,14 +173,14 @@ def load_and_agment(idx, iamge_path, streering_angle):
     # np.concatenate((X_train, [procced_img]), axis=0)
     # np.concatenate((y_train, [streering_angle]), axis=0)
     idx += 1
-    for i in range(sample_per_image - 1):
-        st_a = streering_angle
-        aug, st_a = augment(img, st_a)
-        # np.concatenate((X_train, [aug]), axis=0)
-        # np.concatenate((y_train, [st_a]), axis=0)
-        X_train[idx] = aug
-        y_train[idx] = st_a
-        idx += 1
+    # for i in range(sample_per_image - 1):
+    #     st_a = streering_angle
+    #     aug, st_a = augment(img, st_a)
+    #     # np.concatenate((X_train, [aug]), axis=0)
+    #     # np.concatenate((y_train, [st_a]), axis=0)
+    #     X_train[idx] = aug
+    #     y_train[idx] = st_a
+    #     idx += 1
 
     return idx
 
@@ -192,11 +192,6 @@ def image_data_augmentation(image_paths, streering_angles):
     idx = 0
     for image_path, streering_angle in tzip(image_paths, streering_angles):
         for i, path in enumerate(image_path):
-            if i == 1:
-                streering_angle += 0.2
-            elif i == 2:
-                streering_angle -= 0.2
-
             idx = load_and_agment(idx, path, streering_angle)
 
 
