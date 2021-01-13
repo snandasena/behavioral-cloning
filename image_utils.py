@@ -1,9 +1,12 @@
 # Import dependencies
 import os
+
 import cv2
 import matplotlib.image as mpimg
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
+
 np.random.seed(12)
 
 # Image common params
@@ -13,6 +16,10 @@ img_shape = (i_height, i_width, i_channels)
 # Dataset common params
 data_dir = '/home/sajith/Documents/Acedamic/self-driving-car/data/data/'
 meta_file = data_dir + 'driving_log.csv'
+input_cols = ['center', 'left', 'right']
+output_col = 'steering'
+batch_size = 128
+number_of_rows = 250
 
 
 # Load an image
@@ -198,9 +205,11 @@ def batch_generator(image_paths, steering_angles, batch_size, total_samples, is_
     """
     Generate training image give image paths and associated steering angles
     """
-    X = []
-    y = []
-    for i in tqdm(range(total_samples)):
+    X = np.empty([total_samples * batch_size, i_height, i_width, i_channels], dtype=np.float32)
+    y = np.empty(total_samples * batch_size, dtype=np.float32)
+
+    row = 0
+    for idx in tqdm(range(total_samples)):
         i = 0
         for index in np.random.permutation(image_paths.shape[0]):
 
@@ -214,17 +223,35 @@ def batch_generator(image_paths, steering_angles, batch_size, total_samples, is_
                 image = load_image(image_path[0])
                 image = preprocess(image)
                 # add the image and steering angle to the batch
-            X.append(image)
-            y.append(steering_angle)
+            X[row] = image
+            y[row] = steering_angle
 
+            row += 1
             i += 1
             if i == batch_size:
                 break
 
-    X_train = np.asarray(X, dtype=np.float32)
-    y_train = np.asarray(y, dtype=np.float32)
+    np.savez_compressed("./numpy/train-data", X=X, y=y)
 
-    print("X shape: ", X_train.shape)
-    print("Y shape: ", y_train.shape)
+    print("X shape: ", X.shape)
+    print("Y shape: ", y.shape)
 
-    return X_train, y_train
+
+def load_data():
+    """
+    """
+    meta_df = pd.read_csv(meta_file)
+    X = meta_df[input_cols].values
+    y = meta_df[output_col].values
+
+    print("X data shape: ", X.shape)
+    print("Y data shape: ", y.shape)
+    return X, y
+
+
+if __name__ == '__main__':
+    """
+    Main driver function
+    """
+    X, y = load_data()
+    batch_generator(X, y, batch_size, number_of_rows, True)
