@@ -1,16 +1,15 @@
 import pandas as pd
 import tensorflow as tf
-from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from tensorflow.keras import layers
 
 from image_utils import meta_file, batch_generator
 
 learning_rate = 0.0001
-batch_size = 20
-number_of_rows = 1000
+batch_size = 128
+number_of_rows = 300
 steps_per_epoch = number_of_rows / batch_size
-epoches = 10
+epoches = 15
 img_shape = (66, 200, 3)
 
 input_cols = ['center', 'left', 'right']
@@ -56,7 +55,7 @@ def build_model():
 def train_model(model: tf.keras.Sequential, X, y):
     """
     """
-    X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=12)
+    # X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=12)
 
     checkpoint = keras.callbacks.ModelCheckpoint('./models/model-{epoch:03d}.h5',
                                                  monitor='val_loss',
@@ -72,13 +71,13 @@ def train_model(model: tf.keras.Sequential, X, y):
     model.compile(loss='mse', optimizer=tf.optimizers.Adam(learning_rate))
     print(model.summary())
 
-    training_generator = batch_generator(X_train, y_train, batch_size=batch_size, is_training=True)
-    validation_generator = batch_generator(X_valid, y_valid, batch_size=batch_size, is_training=False)
+    # training_generator = batch_generator(X_train, y_train, batch_size=batch_size, is_training=True)
+    # validation_generator = batch_generator(X_valid, y_valid, batch_size=batch_size, is_training=False)
 
-    model.fit(training_generator,
-              steps_per_epoch=steps_per_epoch,
+    model.fit(x=X,
+              y=y,
               epochs=epoches,
-              validation_data=validation_generator,
+              validation_split=0.2,
               shuffle=True,
               callbacks=[checkpoint, earlystop],
               verbose=2)
@@ -91,5 +90,6 @@ if __name__ == '__main__':
     Main driver function
     """
     X, y = load_data()
+    X_train, y_train = batch_generator(X, y, batch_size, number_of_rows, True)
     model = build_model()
-    train_model(model, X, y)
+    train_model(model, X_train, y_train)
