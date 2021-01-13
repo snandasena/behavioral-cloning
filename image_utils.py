@@ -1,30 +1,19 @@
 # Import dependencies
 import os
-import pickle
 
 import cv2
 import matplotlib.image as mpimg
 import numpy as np
-import pandas as pd
-from tqdm.contrib import tzip
+
+np.random.seed(12)
 
 # Image common params
 i_height, i_width, i_channels = 66, 200, 3
 img_shape = (i_height, i_width, i_channels)
 
 # Dataset common params
-data_dir = './data/data/'
+data_dir = '/home/sajith/Documents/Acedamic/self-driving-car/data/data/'
 meta_file = data_dir + 'driving_log.csv'
-input_cols = ['center', 'left', 'right']
-output_col = 'steering'
-# sample_per_image = 1
-
-meta_df = pd.read_csv(meta_file)
-X = meta_df[input_cols].values
-y = meta_df[output_col].values
-
-X_train = np.empty([len(X) * 3, i_height, i_width, i_channels], dtype=np.float32)
-y_train = np.empty(len(y) * 3, dtype=np.float32)
 
 
 # Load an image
@@ -145,63 +134,60 @@ def random_brightness(img):
     return cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
 
 
+def select_random_image(image_path, steering_angle):
+    """
+    Randomly choose an image from the center, left or right, and adjust
+    the steering angle.
+    """
+    center, left, right = image_path
+    choice = np.random.choice(3)
+    if choice == 0:
+        return load_image(left), steering_angle + 0.2
+    elif choice == 1:
+        return load_image(right), steering_angle - 0.2
+    return load_image(center), steering_angle
+
+
 # Image data augmentation
-def augment(img, streering_angle, range_x=100, range_y=10):
+def augment(image_path, in_streering_angle, range_x=100, range_y=10):
     """
     Augmenting images
     """
-    img, streering_angle = random_flip(img, streering_angle)
-    img, streering_angle = random_translate(img, streering_angle, range_x, range_y)
+    img, steering_angle = select_random_image(image_path, in_streering_angle)
+
+    img, steering_angle = random_flip(img, steering_angle)
+    img, steering_angle = random_translate(img, steering_angle, range_x, range_y)
     img = crop_image(img)
     img = resize_image(img)
     img = random_shadow(img)
     img = random_brightness(img)
     img = convert_rgb2yuv(img)
 
-    return img, streering_angle
+    return img, steering_angle
 
 
-def load_and_agment(idx, iamge_path, streering_angle):
+def batch_generator(image_paths, steering_angles, batch_size, is_training):
     """
-            X_train = np.concatenate((X_train, x), axis=0)
-            y_train = np.concatenate((y_train, y), axis=0)
+    Generate training image give image paths and associated steering angles
     """
-    img = load_image(iamge_path)
-    procced_img = preprocess(img)
-    X_train[idx] = procced_img
-    y_train[idx] = streering_angle
-    # np.concatenate((X_train, [procced_img]), axis=0)
-    # np.concatenate((y_train, [streering_angle]), axis=0)
-    idx += 1
-    # for i in range(sample_per_image - 1):
-    #     st_a = streering_angle
-    #     aug, st_a = augment(img, st_a)
-    #     # np.concatenate((X_train, [aug]), axis=0)
-    #     # np.concatenate((y_train, [st_a]), axis=0)
-    #     X_train[idx] = aug
-    #     y_train[idx] = st_a
-    #     idx += 1
+    images = np.empty([batch_size, i_height, i_width, i_channels], dtype=np.float32)
+    steers = np.empty(batch_size, dtype=np.float32)
+    while True:
+        i = 0
+        for index in np.random.permutation(image_paths.shape[0]):
+            image_path = image_paths[index]
+            steering_angle = steering_angles[index]
+            # argumentation
+            if is_training and np.random.rand() < 0.6:
+                image, steering_angle = augment(image_path, steering_angle)
 
-    return idx
-
-
-def image_data_augmentation(image_paths, streering_angles):
-    """
-
-    """
-    idx = 0
-    for image_path, streering_angle in tzip(image_paths, streering_angles):
-        for i, path in enumerate(image_path):
-            idx = load_and_agment(idx, path, streering_angle)
-
-
-if __name__ == '__main__':
-    image_data_augmentation(X, y)
-
-    image_data = {
-        'X_train': X_train,
-        'y_train': y_train
-    }
-
-    with open("data/data.p", 'wb') as p:
-        pickle.dump(image_data, p, protocol=pickle.HIGHEST_PROTOCOL)
+            else:
+                image = load_image(image_path[0])
+                image = preprocess(image)
+                # add the image and steering angle to the batch
+            images[i] = image
+            steers[i] = steering_angle
+            i += 1
+            if i == batch_size:
+                break
+        yield images, steers
