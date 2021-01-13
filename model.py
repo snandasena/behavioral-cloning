@@ -1,21 +1,29 @@
 import pickle
 
 import tensorflow as tf
+import pandas as pd
 from tensorflow import keras
 from tensorflow.keras import layers
+from image_utils import meta_file, batch_generator
+from sklearn.model_selection import train_test_split
 
-learning_rate = 1e-4
-batch_size = 115
-epoches = 40
+learning_rate = 0.0001
+batch_size = 40
+images_per_sample = 15000
+epoches = 10
 img_shape = (66, 200, 3)
+
+input_cols = ['center', 'left', 'right']
+output_col = 'steering'
 
 
 def load_data():
     """
     """
-    with open('data/data.p', mode='rb') as f:
-        train = pickle.load(f)
-    X, y = train['X_train'], train['y_train']
+    meta_df = pd.read_csv(meta_file)
+    X = meta_df[input_cols].values
+    y = meta_df[output_col].values
+
     print("X data shape: ", X.shape)
     print("Y data shape: ", y.shape)
     return X, y
@@ -45,9 +53,11 @@ def build_model():
     return model
 
 
-def train_model(model, X_train, y_train):
+def train_model(model: tf.keras.Sequential, X, y):
     """
     """
+    X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=12)
+
     checkpoint = keras.callbacks.ModelCheckpoint(
         './models/model-{epoch:03d}.h5',
         monitor='val_loss',
@@ -58,11 +68,14 @@ def train_model(model, X_train, y_train):
     model.compile(loss='mse', optimizer=tf.optimizers.Adam(learning_rate))
     print(model.summary())
 
-    model.fit(X_train,
-              y_train,
+    training_generator = batch_generator(X_train, y_train, batch_size, True)
+    validation_generator = batch_generator(X_valid, y_valid, batch_size, False)
+
+    model.fit(training_generator,
               epochs=epoches,
-              validation_split=0.2,
-              batch_size=batch_size,
+              max_queue_size=10,
+              workers=10,
+              validation_data=validation_generator,
               shuffle=True,
               callbacks=[checkpoint],
               use_multiprocessing=True,
