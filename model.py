@@ -1,31 +1,20 @@
-import pandas as pd
 import tensorflow as tf
+import numpy as np
 from tensorflow import keras
 from tensorflow.keras import layers
 
-from image_utils import meta_file, batch_generator
-
 learning_rate = 0.0001
-batch_size = 128
-number_of_rows = 300
-steps_per_epoch = number_of_rows / batch_size
 epoches = 15
 img_shape = (66, 200, 3)
-
-input_cols = ['center', 'left', 'right']
-output_col = 'steering'
 
 
 def load_data():
     """
     """
-    meta_df = pd.read_csv(meta_file)
-    X = meta_df[input_cols].values
-    y = meta_df[output_col].values
+    with np.load('./numpy/train-data.npz') as data:
+        train_dataset = tf.data.Dataset.from_tensor_slices((data['X'], data['y']))
 
-    print("X data shape: ", X.shape)
-    print("Y data shape: ", y.shape)
-    return X, y
+    return train_dataset
 
 
 def build_model():
@@ -52,7 +41,7 @@ def build_model():
     return model
 
 
-def train_model(model: tf.keras.Sequential, X, y):
+def train_model(model, dataset):
     """
     """
     # X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=12)
@@ -71,15 +60,13 @@ def train_model(model: tf.keras.Sequential, X, y):
     model.compile(loss='mse', optimizer=tf.optimizers.Adam(learning_rate))
     print(model.summary())
 
-    # training_generator = batch_generator(X_train, y_train, batch_size=batch_size, is_training=True)
-    # validation_generator = batch_generator(X_valid, y_valid, batch_size=batch_size, is_training=False)
-
-    model.fit(x=X,
-              y=y,
+    model.fit(dataset,
               epochs=epoches,
               validation_split=0.2,
               shuffle=True,
               callbacks=[checkpoint, earlystop],
+              use_multiprocessing=True,
+              workers=8,
               verbose=2)
 
     model.save('model.h5')
@@ -89,7 +76,6 @@ if __name__ == '__main__':
     """
     Main driver function
     """
-    X, y = load_data()
-    X_train, y_train = batch_generator(X, y, batch_size, number_of_rows, True)
+    dataset = load_data()
     model = build_model()
-    train_model(model, X_train, y_train)
+    train_model(model, dataset)

@@ -1,28 +1,25 @@
 import argparse
 import base64
-from datetime import datetime
 import os
 import shutil
-
-import numpy as np
-import socketio
-import eventlet
-import eventlet.wsgi
-from PIL import Image
-from flask import Flask
+from datetime import datetime
 from io import BytesIO
 
-from tensorflow.keras.models import load_model
+import eventlet.wsgi
 import h5py
+import numpy as np
+import socketio
+from PIL import Image
+from flask import Flask
 from tensorflow.keras import __version__ as keras_version
+from tensorflow.keras.models import load_model
+
 from image_utils import preprocess
 
 sio = socketio.Server()
 app = Flask(__name__)
 model = None
 prev_image_array = None
-
-import cv2
 
 
 class SimplePIController:
@@ -67,7 +64,7 @@ def telemetry(sid, data):
         image_array = preprocess(image_array)
         print(image_array.shape)
         image_array = np.asarray(image_array, dtype=np.float32)
-        steering_angle = float(model.predict(image_array[None,:,:,:])[0])
+        steering_angle = float(model.predict(image_array[None, :, :, :])[0])
 
         throttle = controller.update(float(speed))
 
