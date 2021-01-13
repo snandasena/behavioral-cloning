@@ -175,6 +175,7 @@ def batch_generator(image_paths, steering_angles, batch_size, is_training):
     while True:
         i = 0
         for index in np.random.permutation(image_paths.shape[0]):
+
             image_path = image_paths[index]
             steering_angle = steering_angles[index]
             # argumentation
@@ -187,7 +188,9 @@ def batch_generator(image_paths, steering_angles, batch_size, is_training):
                 # add the image and steering angle to the batch
             images[i] = image
             steers[i] = steering_angle
+
             i += 1
             if i == batch_size:
                 break
+
         yield images, steers

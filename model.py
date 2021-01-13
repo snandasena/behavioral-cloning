@@ -1,15 +1,15 @@
-import pickle
-
-import tensorflow as tf
 import pandas as pd
+import tensorflow as tf
+from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from tensorflow.keras import layers
+
 from image_utils import meta_file, batch_generator
-from sklearn.model_selection import train_test_split
 
 learning_rate = 0.0001
-batch_size = 40
-images_per_sample = 15000
+batch_size = 20
+number_of_rows = 1000
+steps_per_epoch = number_of_rows / batch_size
 epoches = 10
 img_shape = (66, 200, 3)
 
@@ -58,33 +58,38 @@ def train_model(model: tf.keras.Sequential, X, y):
     """
     X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=12)
 
-    checkpoint = keras.callbacks.ModelCheckpoint(
-        './models/model-{epoch:03d}.h5',
-        monitor='val_loss',
-        verbose=0,
-        save_best_only='true',
-        mode='auto')
+    checkpoint = keras.callbacks.ModelCheckpoint('./models/model-{epoch:03d}.h5',
+                                                 monitor='val_loss',
+                                                 verbose=2,
+                                                 save_best_only='true',
+                                                 mode='auto')
+
+    earlystop = keras.callbacks.EarlyStopping(monitor='val_loss',
+                                              mode='auto',
+                                              verbose=2,
+                                              patience=5)
 
     model.compile(loss='mse', optimizer=tf.optimizers.Adam(learning_rate))
     print(model.summary())
 
-    training_generator = batch_generator(X_train, y_train, batch_size, True)
-    validation_generator = batch_generator(X_valid, y_valid, batch_size, False)
+    training_generator = batch_generator(X_train, y_train, batch_size=batch_size, is_training=True)
+    validation_generator = batch_generator(X_valid, y_valid, batch_size=batch_size, is_training=False)
 
     model.fit(training_generator,
+              steps_per_epoch=steps_per_epoch,
               epochs=epoches,
-              max_queue_size=10,
-              workers=10,
               validation_data=validation_generator,
               shuffle=True,
-              callbacks=[checkpoint],
-              use_multiprocessing=True,
+              callbacks=[checkpoint, earlystop],
               verbose=2)
 
     model.save('model.h5')
 
 
 if __name__ == '__main__':
+    """
+    Main driver function
+    """
     X, y = load_data()
     model = build_model()
     train_model(model, X, y)
