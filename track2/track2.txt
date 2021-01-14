@@ -1,0 +1,264 @@
+(vm) pamudi@pamudi-home:~/Documents/sajith/behavioral-cloning$ python model.py 
+2021-01-14 19:36:36.339107: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-01-14 19:37:09.334508: I tensorflow/compiler/jit/xla_cpu_device.cc:41] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-01-14 19:37:09.408532: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcuda.so.1
+2021-01-14 19:37:09.485946: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:941] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2021-01-14 19:37:09.486386: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1720] Found device 0 with properties: 
+pciBusID: 0000:01:00.0 name: GeForce GTX 1650 computeCapability: 7.5
+coreClock: 1.56GHz coreCount: 16 deviceMemorySize: 3.82GiB deviceMemoryBandwidth: 119.24GiB/s
+2021-01-14 19:37:09.486420: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudart.so.11.0
+2021-01-14 19:37:09.497007: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublas.so.11
+2021-01-14 19:37:09.497063: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcublasLt.so.11
+2021-01-14 19:37:09.497306: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcufft.so.10'; dlerror: libcufft.so.10: cannot open shared object file: No such file or directory
+2021-01-14 19:37:09.497410: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcurand.so.10'; dlerror: libcurand.so.10: cannot open shared object file: No such file or directory
+2021-01-14 19:37:09.497525: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcusolver.so.10'; dlerror: libcusolver.so.10: cannot open shared object file: No such file or directory
+2021-01-14 19:37:09.497605: W tensorflow/stream_executor/platform/default/dso_loader.cc:60] Could not load dynamic library 'libcusparse.so.11'; dlerror: libcusparse.so.11: cannot open shared object file: No such file or directory
+2021-01-14 19:37:09.498400: I tensorflow/stream_executor/platform/default/dso_loader.cc:49] Successfully opened dynamic library libcudnn.so.8
+2021-01-14 19:37:09.498422: W tensorflow/core/common_runtime/gpu/gpu_device.cc:1757] Cannot dlopen some GPU libraries. Please make sure the missing libraries mentioned above are installed properly if you would like to use GPU. Follow the guide at https://www.tensorflow.org/install/gpu for how to download and setup the required libraries for your platform.
+Skipping registering GPU devices...
+2021-01-14 19:37:09.499223: I tensorflow/compiler/jit/xla_gpu_device.cc:99] Not creating XLA devices, tf_xla_enable_xla_devices not set
+2021-01-14 19:37:09.499253: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1261] Device interconnect StreamExecutor with strength 1 edge matrix:
+2021-01-14 19:37:09.499261: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1267]      
+Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+lambda (Lambda)              (None, 66, 200, 3)        0         
+_________________________________________________________________
+conv2d (Conv2D)              (None, 31, 98, 24)        1824      
+_________________________________________________________________
+conv2d_1 (Conv2D)            (None, 14, 47, 36)        21636     
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 5, 22, 48)         43248     
+_________________________________________________________________
+conv2d_3 (Conv2D)            (None, 3, 20, 64)         27712     
+_________________________________________________________________
+conv2d_4 (Conv2D)            (None, 1, 18, 64)         36928     
+_________________________________________________________________
+dropout (Dropout)            (None, 1, 18, 64)         0         
+_________________________________________________________________
+flatten (Flatten)            (None, 1152)              0         
+_________________________________________________________________
+dense (Dense)                (None, 100)               115300    
+_________________________________________________________________
+dense_1 (Dense)              (None, 50)                5050      
+_________________________________________________________________
+dense_2 (Dense)              (None, 10)                510       
+_________________________________________________________________
+dense_3 (Dense)              (None, 1)                 11        
+=================================================================
+Total params: 252,219
+Trainable params: 252,219
+Non-trainable params: 0
+_________________________________________________________________
+None
+2021-01-14 19:37:10.057550: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 7785676800 exceeds 10% of free system memory.
+2021-01-14 19:37:13.101595: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:116] None of the MLIR optimization passes are enabled (registered 2)
+2021-01-14 19:37:13.178946: I tensorflow/core/platform/profile_utils/cpu_utils.cc:112] CPU Frequency: 2599990000 Hz
+Epoch 1/50
+2021-01-14 19:38:28.579738: W tensorflow/core/framework/cpu_allocator_impl.cc:80] Allocation of 1946419200 exceeds 10% of free system memory.
+1536/1536 - 86s - loss: 0.1607 - val_loss: 0.1412
+
+Epoch 00001: val_loss improved from inf to 0.14123, saving model to ./models/model-001.h5
+Epoch 2/50
+
+
+
+
+
+1536/1536 - 81s - loss: 0.1400 - val_loss: 0.1341
+
+Epoch 00002: val_loss improved from 0.14123 to 0.13409, saving model to ./models/model-002.h5
+Epoch 3/50
+1536/1536 - 83s - loss: 0.1337 - val_loss: 0.1305
+
+Epoch 00003: val_loss improved from 0.13409 to 0.13053, saving model to ./models/model-003.h5
+Epoch 4/50
+1536/1536 - 83s - loss: 0.1287 - val_loss: 0.1261
+
+Epoch 00004: val_loss improved from 0.13053 to 0.12613, saving model to ./models/model-004.h5
+Epoch 5/50
+1536/1536 - 84s - loss: 0.1250 - val_loss: 0.1230
+
+Epoch 00005: val_loss improved from 0.12613 to 0.12304, saving model to ./models/model-005.h5
+Epoch 6/50
+1536/1536 - 84s - loss: 0.1216 - val_loss: 0.1223
+
+Epoch 00006: val_loss improved from 0.12304 to 0.12226, saving model to ./models/model-006.h5
+Epoch 7/50
+1536/1536 - 84s - loss: 0.1185 - val_loss: 0.1186
+
+Epoch 00007: val_loss improved from 0.12226 to 0.11859, saving model to ./models/model-007.h5
+Epoch 8/50
+1536/1536 - 85s - loss: 0.1163 - val_loss: 0.1160
+
+Epoch 00008: val_loss improved from 0.11859 to 0.11601, saving model to ./models/model-008.h5
+Epoch 9/50
+1536/1536 - 85s - loss: 0.1140 - val_loss: 0.1144
+
+Epoch 00009: val_loss improved from 0.11601 to 0.11444, saving model to ./models/model-009.h5
+Epoch 10/50
+1536/1536 - 85s - loss: 0.1111 - val_loss: 0.1140
+
+Epoch 00010: val_loss improved from 0.11444 to 0.11395, saving model to ./models/model-010.h5
+Epoch 11/50
+1536/1536 - 85s - loss: 0.1090 - val_loss: 0.1122
+
+Epoch 00011: val_loss improved from 0.11395 to 0.11221, saving model to ./models/model-011.h5
+Epoch 12/50
+1536/1536 - 85s - loss: 0.1065 - val_loss: 0.1102
+
+Epoch 00012: val_loss improved from 0.11221 to 0.11017, saving model to ./models/model-012.h5
+Epoch 13/50
+1536/1536 - 85s - loss: 0.1041 - val_loss: 0.1092
+
+Epoch 00013: val_loss improved from 0.11017 to 0.10921, saving model to ./models/model-013.h5
+Epoch 14/50
+1536/1536 - 85s - loss: 0.1026 - val_loss: 0.1097
+
+Epoch 00014: val_loss did not improve from 0.10921
+Epoch 15/50
+1536/1536 - 84s - loss: 0.1003 - val_loss: 0.1078
+
+Epoch 00015: val_loss improved from 0.10921 to 0.10779, saving model to ./models/model-015.h5
+Epoch 16/50
+1536/1536 - 85s - loss: 0.0985 - val_loss: 0.1062
+
+Epoch 00016: val_loss improved from 0.10779 to 0.10624, saving model to ./models/model-016.h5
+Epoch 17/50
+1536/1536 - 84s - loss: 0.0966 - val_loss: 0.1063
+
+Epoch 00017: val_loss did not improve from 0.10624
+Epoch 18/50
+1536/1536 - 84s - loss: 0.0947 - val_loss: 0.1049
+
+Epoch 00018: val_loss improved from 0.10624 to 0.10488, saving model to ./models/model-018.h5
+Epoch 19/50
+1536/1536 - 85s - loss: 0.0931 - val_loss: 0.1045
+
+Epoch 00019: val_loss improved from 0.10488 to 0.10453, saving model to ./models/model-019.h5
+Epoch 20/50
+1536/1536 - 85s - loss: 0.0918 - val_loss: 0.1042
+
+Epoch 00020: val_loss improved from 0.10453 to 0.10424, saving model to ./models/model-020.h5
+Epoch 21/50
+1536/1536 - 85s - loss: 0.0902 - val_loss: 0.1023
+
+Epoch 00021: val_loss improved from 0.10424 to 0.10228, saving model to ./models/model-021.h5
+Epoch 22/50
+1536/1536 - 85s - loss: 0.0881 - val_loss: 0.1048
+
+Epoch 00022: val_loss did not improve from 0.10228
+Epoch 23/50
+1536/1536 - 85s - loss: 0.0873 - val_loss: 0.1020
+
+Epoch 00023: val_loss improved from 0.10228 to 0.10195, saving model to ./models/model-023.h5
+Epoch 24/50
+1536/1536 - 86s - loss: 0.0856 - val_loss: 0.1024
+
+Epoch 00024: val_loss did not improve from 0.10195
+Epoch 25/50
+1536/1536 - 85s - loss: 0.0845 - val_loss: 0.1006
+
+Epoch 00025: val_loss improved from 0.10195 to 0.10058, saving model to ./models/model-025.h5
+Epoch 26/50
+1536/1536 - 85s - loss: 0.0832 - val_loss: 0.1006
+
+Epoch 00026: val_loss did not improve from 0.10058
+Epoch 27/50
+1536/1536 - 84s - loss: 0.0815 - val_loss: 0.1004
+
+Epoch 00027: val_loss improved from 0.10058 to 0.10043, saving model to ./models/model-027.h5
+Epoch 28/50
+1536/1536 - 85s - loss: 0.0803 - val_loss: 0.0997
+
+Epoch 00028: val_loss improved from 0.10043 to 0.09970, saving model to ./models/model-028.h5
+Epoch 29/50
+1536/1536 - 84s - loss: 0.0793 - val_loss: 0.0990
+
+Epoch 00029: val_loss improved from 0.09970 to 0.09905, saving model to ./models/model-029.h5
+Epoch 30/50
+1536/1536 - 85s - loss: 0.0783 - val_loss: 0.0989
+
+Epoch 00030: val_loss improved from 0.09905 to 0.09890, saving model to ./models/model-030.h5
+Epoch 31/50
+1536/1536 - 85s - loss: 0.0774 - val_loss: 0.0983
+
+Epoch 00031: val_loss improved from 0.09890 to 0.09827, saving model to ./models/model-031.h5
+Epoch 32/50
+1536/1536 - 86s - loss: 0.0765 - val_loss: 0.1000
+
+Epoch 00032: val_loss did not improve from 0.09827
+Epoch 33/50
+1536/1536 - 86s - loss: 0.0756 - val_loss: 0.0981
+
+Epoch 00033: val_loss improved from 0.09827 to 0.09808, saving model to ./models/model-033.h5
+Epoch 34/50
+1536/1536 - 85s - loss: 0.0741 - val_loss: 0.0979
+
+Epoch 00034: val_loss improved from 0.09808 to 0.09792, saving model to ./models/model-034.h5
+Epoch 35/50
+1536/1536 - 85s - loss: 0.0727 - val_loss: 0.0982
+
+Epoch 00035: val_loss did not improve from 0.09792
+Epoch 36/50
+1536/1536 - 85s - loss: 0.0726 - val_loss: 0.0963
+
+Epoch 00036: val_loss improved from 0.09792 to 0.09631, saving model to ./models/model-036.h5
+Epoch 37/50
+1536/1536 - 85s - loss: 0.0714 - val_loss: 0.0971
+
+Epoch 00037: val_loss did not improve from 0.09631
+Epoch 38/50
+1536/1536 - 85s - loss: 0.0704 - val_loss: 0.0984
+
+Epoch 00038: val_loss did not improve from 0.09631
+Epoch 39/50
+1536/1536 - 85s - loss: 0.0695 - val_loss: 0.0966
+
+Epoch 00039: val_loss did not improve from 0.09631
+Epoch 40/50
+1536/1536 - 85s - loss: 0.0686 - val_loss: 0.0975
+
+Epoch 00040: val_loss did not improve from 0.09631
+Epoch 41/50
+1536/1536 - 85s - loss: 0.0676 - val_loss: 0.0961
+
+Epoch 00041: val_loss improved from 0.09631 to 0.09605, saving model to ./models/model-041.h5
+Epoch 42/50
+1536/1536 - 86s - loss: 0.0667 - val_loss: 0.0982
+
+Epoch 00042: val_loss did not improve from 0.09605
+Epoch 43/50
+1536/1536 - 86s - loss: 0.0661 - val_loss: 0.0956
+
+Epoch 00043: val_loss improved from 0.09605 to 0.09564, saving model to ./models/model-043.h5
+Epoch 44/50
+1536/1536 - 85s - loss: 0.0654 - val_loss: 0.0971
+
+Epoch 00044: val_loss did not improve from 0.09564
+Epoch 45/50
+1536/1536 - 86s - loss: 0.0651 - val_loss: 0.0953
+
+Epoch 00045: val_loss improved from 0.09564 to 0.09534, saving model to ./models/model-045.h5
+Epoch 46/50
+1536/1536 - 86s - loss: 0.0639 - val_loss: 0.0959
+
+Epoch 00046: val_loss did not improve from 0.09534
+Epoch 47/50
+1536/1536 - 85s - loss: 0.0630 - val_loss: 0.0944
+
+Epoch 00047: val_loss improved from 0.09534 to 0.09437, saving model to ./models/model-047.h5
+Epoch 48/50
+1536/1536 - 86s - loss: 0.0624 - val_loss: 0.0958
+
+Epoch 00048: val_loss did not improve from 0.09437
+Epoch 49/50
+1536/1536 - 84s - loss: 0.0616 - val_loss: 0.0955
+
+Epoch 00049: val_loss did not improve from 0.09437
+Epoch 50/50
+1536/1536 - 85s - loss: 0.0610 - val_loss: 0.0953
+
+Epoch 00050: val_loss did not improve from 0.09437
+
