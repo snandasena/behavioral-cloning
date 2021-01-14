@@ -17,5 +17,9 @@ The goal of the project is to build a ML model to simulate a car to run in a aut
 To undestand about these simulator generated data I used a 'Jupyter Notebook](image_utils.ipynb) and did some preliminary data precessing steps.  
 **Note: This Jupyter file is not covering all the steps I was followed and it was used to start image preprocessing.**
 
+Following is the simulator generated driving logs CSV's Pandas dataframe head.
+
+![](data-look-a-like.png)
+
 
 
