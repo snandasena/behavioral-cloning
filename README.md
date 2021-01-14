@@ -19,7 +19,7 @@ To undestand about these simulator generated data I used a 'Jupyter Notebook](im
 
 Following is the simulator generated driving logs CSV's Pandas dataframe head.
 
-![](data-look-a-like.png)
+![](resources/data-look-a-like.png)
 
 
 
