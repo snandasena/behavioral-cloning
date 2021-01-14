@@ -22,6 +22,6 @@ Following is the simulator generated driving logs CSV's Pandas dataframe head.
 ![](resources/data-look-a-like.png)
 
 #### The Data
-This simulator is generating a CSV file with **7** columns and there are **3** of columns contain images related details namely **center, left, and right**. These are the our input lables that we want to use to build a this Regression model. The output of the model is **streering** the streering angle for three images. In real case these three images are taken from three different cameras at the same time.  
+This simulator is generating a CSV file with **7** columns and there are **3** of columns contain images related details namely **center, left, and right**. These are the our input lables that we want to use to build a this **Regression** model. The output of the model is **streering** the streering angle for three images. In real case these three images are taken from three different cameras at the same time.  
 
 
