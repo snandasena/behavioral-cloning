@@ -28,5 +28,8 @@ This simulator is generating a CSV file with **7** columns and there are **3** o
 
 Image source: https://developer.nvidia.com/blog/deep-learning-self-driving-cars/
 
+And following are the simulator generated (track01) images samples respctively **center, left, and right**.
 
-
+Center | Left | Right|
+-------|------|------|
+![](resources/center.png)| ![](resources/left.png) |![](resources/right.png)|  
