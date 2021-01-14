@@ -1,20 +1,21 @@
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
+from image_utils import img_shape
+
 learning_rate = 0.0001
 epoches = 20
-img_shape = (66, 200, 3)
 
 
 def load_data():
     """
     """
     with np.load('./numpy/train-data.npz') as data:
-        X,y = data['X'], data['y']
+        X, y = data['X'], data['y']
 
-    return X,y
+    return X, y
 
 
 def build_model():
@@ -41,11 +42,9 @@ def build_model():
     return model
 
 
-def train_model(model, X,y):
+def train_model(model, X, y):
     """
     """
-    # X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=12)
-
     checkpoint = keras.callbacks.ModelCheckpoint('./models/model-{epoch:03d}.h5',
                                                  monitor='val_loss',
                                                  verbose=2,
@@ -77,6 +76,6 @@ if __name__ == '__main__':
     """
     Main driver function
     """
-    X,y = load_data()
+    X, y = load_data()
     model = build_model()
-    train_model(model, X,y)
+    train_model(model, X, y)
