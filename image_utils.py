@@ -172,35 +172,6 @@ def augment(image_path, in_streering_angle, range_x=100, range_y=10):
     return img, steering_angle
 
 
-# def batch_generator(image_paths, steering_angles, batch_size, is_training):
-#     """
-#     Generate training image give image paths and associated steering angles
-#     """
-#     images = np.empty([batch_size, i_height, i_width, i_channels], dtype=np.float32)
-#     steers = np.empty(batch_size, dtype=np.float32)
-#     while True:
-#         i = 0
-#         for index in np.random.permutation(image_paths.shape[0]):
-#
-#             image_path = image_paths[index]
-#             steering_angle = steering_angles[index]
-#             # argumentation
-#             if is_training and np.random.rand() < 0.6:
-#                 image, steering_angle = augment(image_path, steering_angle)
-#
-#             else:
-#                 image = load_image(image_path[0])
-#                 image = preprocess(image)
-#                 # add the image and steering angle to the batch
-#             images[i] = image
-#             steers[i] = steering_angle
-#
-#             i += 1
-#             if i == batch_size:
-#                 break
-#
-#         yield images, steers
-
 def batch_generator(image_paths, steering_angles, batch_size, total_samples, is_training):
     """
     Generate training image give image paths and associated steering angles
