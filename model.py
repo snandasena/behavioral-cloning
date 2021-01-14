@@ -4,7 +4,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 
 learning_rate = 0.0001
-epoches = 15
+epoches = 20
 img_shape = (66, 200, 3)
 
 
@@ -12,9 +12,9 @@ def load_data():
     """
     """
     with np.load('./numpy/train-data.npz') as data:
-        train_dataset = tf.data.Dataset.from_tensor_slices((data['X'], data['y']))
+        X,y = data['X'], data['y']
 
-    return train_dataset
+    return X,y
 
 
 def build_model():
@@ -41,7 +41,7 @@ def build_model():
     return model
 
 
-def train_model(model, dataset):
+def train_model(model, X,y):
     """
     """
     # X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2, random_state=12)
@@ -60,7 +60,8 @@ def train_model(model, dataset):
     model.compile(loss='mse', optimizer=tf.optimizers.Adam(learning_rate))
     print(model.summary())
 
-    model.fit(dataset,
+    model.fit(X,
+              y,
               epochs=epoches,
               validation_split=0.2,
               shuffle=True,
@@ -76,6 +77,6 @@ if __name__ == '__main__':
     """
     Main driver function
     """
-    dataset = load_data()
+    X,y = load_data()
     model = build_model()
-    train_model(model, dataset)
+    train_model(model, X,y)

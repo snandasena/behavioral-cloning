@@ -14,12 +14,12 @@ i_height, i_width, i_channels = 66, 200, 3
 img_shape = (i_height, i_width, i_channels)
 
 # Dataset common params
-data_dir = '/home/sajith/Documents/Acedamic/self-driving-car/data/data/'
+data_dir = '/home/pamudi/Documents/sajith/data/data/'
 meta_file = data_dir + 'driving_log.csv'
 input_cols = ['center', 'left', 'right']
 output_col = 'steering'
 batch_size = 128
-number_of_rows = 250
+number_of_rows = 400
 
 
 # Load an image
