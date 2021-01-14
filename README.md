@@ -33,3 +33,46 @@ And following are the simulator generated (track01) images samples respctively *
 Center | Left | Right|
 -------|------|------|
 ![](resources/center.png)| ![](resources/left.png) |![](resources/right.png)|  
+
+#### Basic Image Processing
+I used few basic image processing techniques to clean and have nice image data to input for CNN model. Following are the **Python** functions were used to do image processing.
+
+###### Cropping
+This is used to remove Sky and other unnecessray things from training image data.
+
+```python
+# Crop images to extract required road sections and to remove sky from the road
+def crop_image(in_img):
+    """
+    This is used to cropping images 
+    """
+    return in_img[60:-25,:,:]
+    
+```    
+
+###### Re-sizing
+
+```python
+# resize the images
+def resize_image(in_img):
+    """
+    This is an utility function to resize images
+    """
+    return cv2.resize(in_img, (i_width, i_height), cv2.INTER_AREA)
+
+```
+
+###### Colour channel changing
+Here NVIDIA was used to RGB to YUV color channel covertions [readings](https://en.wikipedia.org/wiki/YUV).
+
+```python
+
+
+# convert RGB to YUV image
+def convert_rgb2yuv(in_img):
+    """
+    This is an utility function to convert RGB images to YUV.
+    This technique was intr by NVIDIA for their image pracessing pipeline
+    """
+    return cv2.cvtColor(in_img, cv2.COLOR_RGB2YUV)
+```
