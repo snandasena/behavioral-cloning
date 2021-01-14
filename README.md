@@ -76,3 +76,9 @@ def convert_rgb2yuv(in_img):
     """
     return cv2.cvtColor(in_img, cv2.COLOR_RGB2YUV)
 ```
+
+Following are the image processing pipeline results.
+
+Original | Cropped | Resized | YUV|
+---------|---------|---------|----|
+![](resources/right.png)| ![](resources/croped.png)| ![](resources/resized.png) | ![](resources/yuv.png)|
