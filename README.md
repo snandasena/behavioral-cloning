@@ -171,6 +171,10 @@ def random_brightness(img):
     return cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
     
 ```
+Flip| Translate | Shadow | Brightness|
+----|-----------|--------|-----------|
+![](resources/flip.png)| ![](resources/translate.png)| ![](resources/shaddow.png) | ![](resources/brightness.png)| 
+
 ##### Image Augmentation
 
 Following function was used to do image data augmentation.
@@ -194,5 +198,6 @@ def augment(image_path, in_streering_angle, range_x=100, range_y=10):
     return img, steering_angle
 ```
 
+Following is the sample augmented image.
 
-
+![](resources/augmented.png) 
