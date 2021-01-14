@@ -203,6 +203,42 @@ Following is the sample augmented image.
 
 
 ### Traning Data Preparation
-I have generated tranning data before start training process and saved as Numpy compressed files using using [`np.savez_compresse`](https://numpy.org/doc/stable/reference/generated/numpy.savez_compressed.html).
+I have generated tranning data before start training process and saved as Numpy compressed files using using [`np.savez_compresse`](https://numpy.org/doc/stable/reference/generated/numpy.savez_compressed.html). Following function was used to generate tranning data set.
 
+```python
+def batch_generator(image_paths, steering_angles, batch_size, total_samples, is_training):
+    """
+    Generate training image give image paths and associated steering angles
+    """
+    X = np.empty([total_samples * batch_size, i_height, i_width, i_channels], dtype=np.float32)
+    y = np.empty(total_samples * batch_size, dtype=np.float32)
 
+    row = 0
+    for idx in tqdm(range(total_samples)):
+        i = 0
+        for index in np.random.permutation(image_paths.shape[0]):
+
+            image_path = image_paths[index]
+            steering_angle = steering_angles[index]
+            # argumentation
+            if is_training and np.random.rand() < 0.6:
+                image, steering_angle = augment(image_path, steering_angle)
+
+            else:
+                image = load_image(image_path[0])
+                image = preprocess(image)
+                # add the image and steering angle to the batch
+            X[row] = image
+            y[row] = steering_angle
+
+            row += 1
+            i += 1
+            if i == batch_size:
+                break
+
+    np.savez_compressed("./numpy/train-data", X=X, y=y)
+
+    print("X shape: ", X.shape)
+    print("Y shape: ", y.shape)
+    
+```
