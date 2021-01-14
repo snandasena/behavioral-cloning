@@ -200,3 +200,9 @@ def augment(image_path, in_streering_angle, range_x=100, range_y=10):
 Following is the sample augmented image.
 
 ![](resources/augmented.png) 
+
+
+### Traning Data Preparation
+I have generated tranning data before start training process and saved as Numpy compressed files using using [`np.savez_compresse`](https://numpy.org/doc/stable/reference/generated/numpy.savez_compressed.html).
+
+
