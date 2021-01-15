@@ -20,7 +20,7 @@ The goal of the project is to build a ML model to simulate a car to run in an au
 * Testing with the Simulator
 
 ### Data Preprocessing
-To understand these simulators generated data I used a 'Jupyter Notebook](image_utils.ipynb) and did some preliminary data precessing steps.  
+To understand this simulator, I used Udacity provided dataset and did some preliminary data precessing steps by using this  [`Jupyter Notebook`](image_utils.ipynb).  
 **Note: This Jupyter file is not covering all the steps I followed, and it was used to start image preprocessing.**
 
 Following is the simulator generated driving logs CSV's Pandas dataframe head.
