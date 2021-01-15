@@ -11,6 +11,7 @@ epoches = 20
 
 def load_data():
     """
+    Loading traning dataset
     """
     with np.load('./numpy/train-data.npz') as data:
         X, y = data['X'], data['y']
@@ -20,9 +21,8 @@ def load_data():
 
 def build_model():
     """
-
+    This the model architecture to build CNN model.
     """
-
     model = keras.Sequential(
         [
             layers.Lambda(lambda x: x / 127.5 - 1.0, input_shape=img_shape),
@@ -44,6 +44,7 @@ def build_model():
 
 def train_model(model, X, y):
     """
+    Training the model
     """
     checkpoint = keras.callbacks.ModelCheckpoint('./models/model-{epoch:03d}.h5',
                                                  monitor='val_loss',
