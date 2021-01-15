@@ -247,12 +247,20 @@ def batch_generator(image_paths, steering_angles, batch_size, total_samples, is_
     
 ```
 
+To fit lake track, I geranted **51200** image data points and to fit jungle track I generated **61440** image data points. 
+
 ### Build Model Architecture
 This CNN architecture was implemented based on [`NVIDIA paper`](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf). Following is the original architecture diagram.
 
 |![](resources/nvidea-original.png)|![](resources/cnn-architecture.png)|
 |----------------------------------|-----------------------------------|
 | Original Paper Image             | Tensorflow Keras Model Summary    |
+
+The original architecture was modified with following adjustments.
+
+* Normalized intput by using Lamba layer
+* Added a dropout layer to avoid overfitting after the convolutional layers
+* Used [ELU](https://ml-cheatsheet.readthedocs.io/en/latest/activation_functions.html#elu) (Exponential Linear Unit) activation function for every convolution and dense layers.
 
 Following is Tensorflow Python implementation for above CNN architecture.
 
@@ -279,3 +287,23 @@ def build_model():
 
     return model
 ```
+
+The lake track was trained with the following hyperparameters.
+
+* Learning rate : 0.0001
+* Number of epochers: 20
+* Optimizer: Adam
+* Validation split: 20%
+* Dropout probability: 0.5
+
+The jungle track was trained with the following hyperparameters.
+
+* Learning rate : 0.0001
+* Number of epochers: 50
+* Optimizer: Adam
+* Validation split: 20%
+* Dropout probability: 0.5
+
+**Mean Squared Error[[MSE]](https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html?highlight=mse#mse-l2)** loss function was used to measure tranning and validation error.
+
+And also, to optimize the trainig process early stop technique was used. The model checkpints trechnique was used to save best models. To train these model optionaly parallel processing techiniques were used that are provided by Tensorflow itself.
