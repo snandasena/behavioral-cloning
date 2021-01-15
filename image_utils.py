@@ -211,6 +211,7 @@ def batch_generator(image_paths, steering_angles, batch_size, total_samples, is_
 
 def load_data():
     """
+    Load driving logs and extract features
     """
     meta_df = pd.read_csv(meta_file)
     X = meta_df[input_cols].values
