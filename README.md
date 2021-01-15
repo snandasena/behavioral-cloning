@@ -1,6 +1,9 @@
+Deep Learning
+---
+
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-Behavioral Cloning Project
+Project: Behavioral Cloning
 ---
 |![](resources/lake-track.gif) | ![](resources/jungle-track.gif)|
 |------------------------------|--------------------------------|
