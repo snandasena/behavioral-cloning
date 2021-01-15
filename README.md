@@ -253,3 +253,29 @@ This CNN architecture was implemented based on [`NVIDIA paper`](https://images.n
 |![](resources/nvidea-original.png)|![](resources/cnn-architecture.png)|
 |----------------------------------|-----------------------------------|
 | Original Paper Image             | Tensorflow Keras Model Summary    |
+
+Following is Tensorflow Python implementation for above CNN architecture.
+
+```python
+def build_model():
+    """
+    This the model architecture to build CNN model.
+    """
+    model = keras.Sequential(
+        [
+            layers.Lambda(lambda x: x / 127.5 - 1.0, input_shape=img_shape),
+            layers.Conv2D(filters=24, kernel_size=(5, 5), strides=(2, 2), activation='elu'),
+            layers.Conv2D(filters=36, kernel_size=(5, 5), strides=(2, 2), activation='elu'),
+            layers.Conv2D(filters=48, kernel_size=(5, 5), strides=(2, 2), activation='elu'),
+            layers.Conv2D(filters=64, kernel_size=(3, 3), activation='elu'),
+            layers.Conv2D(filters=64, kernel_size=(3, 3), activation='elu'),
+            layers.Dropout(0.5),
+            layers.Flatten(),
+            layers.Dense(100, activation='elu'),
+            layers.Dense(50, activation='elu'),
+            layers.Dense(10, activation='elu'),
+            layers.Dense(1)
+        ])
+
+    return model
+```
