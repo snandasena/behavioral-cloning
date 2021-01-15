@@ -309,4 +309,38 @@ The jungle track was trained with the following hyperparameters.
 
 And also, to optimize the trainig process early stop technique was used. The model checkpints trechnique was used to save best models. To train these model optionaly parallel processing techiniques were used that are provided by Tensorflow itself.
 
+Following is the Python function for the training process.
+
+```python
+def train_model(model, X, y):
+    """
+    Training the model
+    """
+    checkpoint = keras.callbacks.ModelCheckpoint('./models/model-{epoch:03d}.h5',
+                                                 monitor='val_loss',
+                                                 verbose=2,
+                                                 save_best_only='true',
+                                                 mode='auto')
+
+    earlystop = keras.callbacks.EarlyStopping(monitor='val_loss',
+                                              mode='auto',
+                                              verbose=2,
+                                              patience=5)
+
+    model.compile(loss='mse', optimizer=tf.optimizers.Adam(learning_rate))
+    print(model.summary())
+
+    model.fit(X,
+              y,
+              epochs=epoches,
+              validation_split=0.2,
+              shuffle=True,
+              callbacks=[checkpoint, earlystop],
+              use_multiprocessing=True,
+              workers=8,
+              verbose=2)
+
+    model.save('model.h5')
+```
+
 
