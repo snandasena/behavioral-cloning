@@ -288,6 +288,7 @@ def build_model():
     return model
 ```
 
+### Training the Model
 The lake track was trained with the following hyperparameters.
 
 * Learning rate : 0.0001
@@ -307,3 +308,5 @@ The jungle track was trained with the following hyperparameters.
 **Mean Squared Error[[MSE]](https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html?highlight=mse#mse-l2)** loss function was used to measure tranning and validation error.
 
 And also, to optimize the trainig process early stop technique was used. The model checkpints trechnique was used to save best models. To train these model optionaly parallel processing techiniques were used that are provided by Tensorflow itself.
+
+
