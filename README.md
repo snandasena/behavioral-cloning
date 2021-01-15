@@ -11,40 +11,40 @@ Project: Behavioral Cloning
 
 
 ### Introduction
-The goal of the project is to build a ML model to simulate a car to run in a autonomus mode that is provided by Udacity. The simulator can be found [here](https://github.com/udacity/self-driving-car-sim). The deep neural network will be used to build this model primalary Convolutional Neuaral Network(CNN) will be implemented by using [NVIDIA End-to-End Deep Learning for Self-Driving Cars architecture](https://developer.nvidia.com/blog/deep-learning-self-driving-cars/). There are two provided lane tracks to generate training data for this project and this project requirement is to build a model for first track. To continue this project successfuly following steps were proccessed.
+The goal of the project is to build a ML model to simulate a car to run in an autonomous mode that is provided by Udacity. The simulator can be found [here](https://github.com/udacity/self-driving-car-sim). The deep neural network will be used to build this model and primary Convolutional Neural Network(CNN) will be implemented by using [NVIDIA End-to-End Deep Learning for Self-Driving Cars architecture](https://developer.nvidia.com/blog/deep-learning-self-driving-cars/). There are two provided lane tracks to generate training data for this project, and this project requirement is to build a model for the first track. To continue this project successfully following steps were processed.
 
-* Data Preprocessing & Image Data Aumentation
+* Data Preprocessing & Image Data Augmentation
 * Traning Data Preparation
 * Building the Model Architecture
 * Training the Model
 * Testing with the Simulator
 
 ### Data Preprocessing
-To undestand about these simulator generated data I used a 'Jupyter Notebook](image_utils.ipynb) and did some preliminary data precessing steps.  
-**Note: This Jupyter file is not covering all the steps I was followed and it was used to start image preprocessing.**
+To understand these simulators generated data I used a 'Jupyter Notebook](image_utils.ipynb) and did some preliminary data precessing steps.  
+**Note: This Jupyter file is not covering all the steps I followed, and it was used to start image preprocessing.**
 
 Following is the simulator generated driving logs CSV's Pandas dataframe head.
 
 ![](resources/data-look-a-like.png)
 
 #### The Data
-This simulator is generating a CSV file with **7** columns and there are **3** of columns contain images related details namely **center, left, and right**. These are the our input lables that we want to use to build a this **Regression** model. The output of the model is **streering** the streering angle for three images. In real case these three images are taken from three different cameras at the same time.  Following is the high level view of the data collection system that is used by NVIDIA.
+This simulator is generating a CSV file with **7** columns and there are **3** of columns contain images related details namely **center, left, and right**. These are the input labels that we want to use to build this **Regression** model. The output of the model is **steering** the steering angle for three images. In the real case, these three images are taken from three different cameras at the same time.  Following is the high-level view of the data collection system that is used by NVIDIA.
 
 ![](resources/data-collection-system-624x411.png)
 
 Image source: https://developer.nvidia.com/blog/deep-learning-self-driving-cars/
 
-And following are the simulator generated (track01) images samples respctively **center, left, and right**.
+And following are the simulator generated (track01) image samples respectively **center, left, and right**.
 
 Center | Left | Right|
 -------|------|------|
 ![](resources/center.png)| ![](resources/left.png) |![](resources/right.png)|  
 
 #### Basic Image Processing
-I used few basic image processing techniques to clean and have nice image data to input for CNN model. Following are the **Python** functions were used to do image processing.
+I used a few basic image processing techniques to clean and have nice image data to input for CNN model. Following are the **Python** functions were used to do image processing.
 
 ###### Cropping
-This is used to remove Sky and other unnecessray things from training image data.
+This is used to remove Sky and other unnecessary things from training image data.
 
 ```python
 # Crop images to extract required road sections and to remove sky from the road
@@ -69,7 +69,7 @@ def resize_image(in_img):
 ```
 
 ###### Colour channel changing
-Here NVIDIA was used to RGB to YUV color channel covertions [readings](https://en.wikipedia.org/wiki/YUV).
+Here NVIDIA was used to RGB to YUV color channel conversions [readings](https://en.wikipedia.org/wiki/YUV).
 
 ```python
 
@@ -90,7 +90,7 @@ Original | Cropped | Resized | YUV|
 ![](resources/right.png)| ![](resources/croped.png)| ![](resources/resized.png) | ![](resources/yuv.png)|
 
 #### Additional Data Generation
-Udacity provided data set were used to initial training and while tuning the the model additional data were generated by using Udacity simulator. In addition to  data augmentation was used to provde more features for the CNN model. Following are the used data augmentation techniques.
+Udacity provided data sets were used to initial training and while tuning the model additional data were generated by using Udacity simulator. In addition to  data, augmentation was used to provide more features for the CNN model. Following are the used data augmentation techniques.
 
 ###### Random flip
 
@@ -210,7 +210,7 @@ Following is the sample augmented image.
 
 
 ### Traning Data Preparation
-I have generated tranning data before start training process and saved as Numpy compressed files using using [`np.savez_compresse`](https://numpy.org/doc/stable/reference/generated/numpy.savez_compressed.html). Following function was used to generate tranning data set.
+I have generated training data before starting the training process and saved as Numpy compressed files using [`np.savez_compresse`](https://numpy.org/doc/stable/reference/generated/numpy.savez_compressed.html). Following function was used to generate tranning data set.
 
 ```python
 def batch_generator(image_paths, steering_angles, batch_size, total_samples, is_training):
@@ -250,7 +250,7 @@ def batch_generator(image_paths, steering_angles, batch_size, total_samples, is_
     
 ```
 
-To fit lake track, I geranted **51200** image data points and to fit jungle track I generated **61440** image data points. I compressed generated training data with Numpy support, that was help to save gata generating process. As a bottleneck I had to used inmemory dataset and my PC was supported to handle that much of dataset. Otherthan that I tried with Python generators to feed training and validation data, unfortunately that was started to  running infitely and I swiched to inmemory option :(. 
+To fit lake track, I generated **51200** image data points, and to fit jungle track I generated **61440** image data points. I compressed generated training data with Numpy support, that was helping to save data generating process. As a bottleneck, I had to use in-memory dataset and my PC was supported to handle that much of dataset. Other than that I tried with Python generators to feed training and validation data, unfortunately, that was started to  running infinitely and I switched to in-memory option :(. 
 
 ### Build Model Architecture
 This CNN architecture was implemented based on [`NVIDIA paper`](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf). Following is the original architecture diagram.
@@ -259,7 +259,7 @@ This CNN architecture was implemented based on [`NVIDIA paper`](https://images.n
 |----------------------------------|-----------------------------------|
 | Original Paper Image             | Tensorflow Keras Model Summary    |
 
-The original architecture was modified with following adjustments.
+The original architecture was modified with the following adjustments.
 
 * Normalized intput by using Lamba layer
 * Added a dropout layer to avoid overfitting after the convolutional layers
@@ -310,7 +310,7 @@ The jungle track was trained with the following hyperparameters.
 
 **Mean Squared Error[[MSE]](https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html?highlight=mse#mse-l2)** loss function was used to measure tranning and validation error.
 
-And also, to optimize the trainig process early stop technique was used. The model checkpints trechnique was used to save best models. To train these model optionaly parallel processing techiniques were used that are provided by Tensorflow itself.
+And also, to optimize the training process early stop technique was used. The model checkpoints technique was used to save the best models. To train these model optionally parallel processing techniques were used that are provided by Tensorflow itself.
 
 Following is the Python function for the training process.
 
@@ -348,7 +348,7 @@ def train_model(model, X, y):
 
 ### Testing with the Simulator
 
-The final part was the testing with Udacty simulator. It was fun and awsome by seeing how it magically happening. I have attached both lake and jungle tracks video links at the beginning of this writeup. 
+The final part was the testing with Udacty simulator. It was fun and awesome by seeing how it magically happen. I have attached both lake and jungle tracks video links at the beginning of this writeup. 
 
 
 ### References
