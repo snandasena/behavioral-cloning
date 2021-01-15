@@ -28,7 +28,7 @@ Following is the simulator generated driving logs CSV's Pandas dataframe head.
 ![](resources/data-look-a-like.png)
 
 #### The Data
-This simulator is generating a CSV file with **7** columns and there are **3** of columns contain images related details namely **center, left, and right**. These are the input labels that we want to use to build this **Regression** model. The output of the model is **steering** the steering angle for three images. In the real case, these three images are taken from three different cameras at the same time.  Following is the high-level view of the data collection system that is used by NVIDIA.
+This simulator is generating a CSV file with **7** columns and there are **3** of columns contain images related details namely **center, left, and right**. These are the input labels that we want to use to build this **Regression** model. The output of the model is the **steering angle** for three images. In the real case, these three images are taken from three different cameras at the same time.  Following is the high-level view of the data collection system that is used by NVIDIA.
 
 ![](resources/data-collection-system-624x411.png)
 
