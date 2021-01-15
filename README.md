@@ -246,3 +246,10 @@ def batch_generator(image_paths, steering_angles, batch_size, total_samples, is_
     print("Y shape: ", y.shape)
     
 ```
+
+### Build Model Architecture
+This CNN architecture was implemented based on [`NVIDIA paper`](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf). Following is the original architecture diagram.
+
+|![](resources/nvidea-original.png)|![](resources/cnn-architecture.png)|
+|----------------------------------|-----------------------------------|
+| Original Paper Image             | Tensorflow Keras Model Summary    |
