@@ -1,10 +1,14 @@
+Deep Learning
+---
+
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-Behavioral Cloning Project
+Project: Behavioral Cloning
 ---
 |![](resources/lake-track.gif) | ![](resources/jungle-track.gif)|
 |------------------------------|--------------------------------|
-|[`Lake Track`](https://www.youtube.com/watch?v=vTh4Q69m_q0)| [`Jungle Track`](https://www.youtube.com/watch?v=DAxUN5j4wKs)|
+|[`Lake Track`](https://www.youtube.com/watch?v=vTh4Q69m_q0)|[`Jungle Track`](https://www.youtube.com/watch?v=DAxUN5j4wKs)|
+
 
 ### Introduction
 The goal of the project is to build a ML model to simulate a car to run in a autonomus mode that is provided by Udacity. The simulator can be found [here](https://github.com/udacity/self-driving-car-sim). The deep neural network will be used to build this model primalary Convolutional Neuaral Network(CNN) will be implemented by using [NVIDIA End-to-End Deep Learning for Self-Driving Cars architecture](https://developer.nvidia.com/blog/deep-learning-self-driving-cars/). There are two provided lane tracks to generate training data for this project and this project requirement is to build a model for first track. To continue this project successfuly following steps were proccessed.
@@ -13,7 +17,7 @@ The goal of the project is to build a ML model to simulate a car to run in a aut
 * Traning Data Preparation
 * Building the Model Architecture
 * Training the Model
-* Testing with Simulator
+* Testing with the Simulator
 
 ### Data Preprocessing
 To undestand about these simulator generated data I used a 'Jupyter Notebook](image_utils.ipynb) and did some preliminary data precessing steps.  
@@ -245,3 +249,121 @@ def batch_generator(image_paths, steering_angles, batch_size, total_samples, is_
     print("Y shape: ", y.shape)
     
 ```
+
+To fit lake track, I geranted **51200** image data points and to fit jungle track I generated **61440** image data points. I compressed generated training data with Numpy support, that was help to save gata generating process. As a bottleneck I had to used inmemory dataset and my PC was supported to handle that much of dataset. Otherthan that I tried with Python generators to feed training and validation data, unfortunately that was started to  running infitely and I swiched to inmemory option :(. 
+
+### Build Model Architecture
+This CNN architecture was implemented based on [`NVIDIA paper`](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf). Following is the original architecture diagram.
+
+|![](resources/nvidea-original.png)|![](resources/cnn-architecture.png)|
+|----------------------------------|-----------------------------------|
+| Original Paper Image             | Tensorflow Keras Model Summary    |
+
+The original architecture was modified with following adjustments.
+
+* Normalized intput by using Lamba layer
+* Added a dropout layer to avoid overfitting after the convolutional layers
+* Used [ELU](https://ml-cheatsheet.readthedocs.io/en/latest/activation_functions.html#elu) (Exponential Linear Unit) activation function for every convolution and dense layers.
+
+Following is Tensorflow Python implementation for above CNN architecture.
+
+```python
+def build_model():
+    """
+    This the model architecture to build CNN model.
+    """
+    model = keras.Sequential(
+        [
+            layers.Lambda(lambda x: x / 127.5 - 1.0, input_shape=img_shape),
+            layers.Conv2D(filters=24, kernel_size=(5, 5), strides=(2, 2), activation='elu'),
+            layers.Conv2D(filters=36, kernel_size=(5, 5), strides=(2, 2), activation='elu'),
+            layers.Conv2D(filters=48, kernel_size=(5, 5), strides=(2, 2), activation='elu'),
+            layers.Conv2D(filters=64, kernel_size=(3, 3), activation='elu'),
+            layers.Conv2D(filters=64, kernel_size=(3, 3), activation='elu'),
+            layers.Dropout(0.5),
+            layers.Flatten(),
+            layers.Dense(100, activation='elu'),
+            layers.Dense(50, activation='elu'),
+            layers.Dense(10, activation='elu'),
+            layers.Dense(1)
+        ])
+
+    return model
+```
+
+### Training the Model
+The lake track was trained with the following hyperparameters.
+
+* Learning rate : 0.0001
+* Number of epochers: 20
+* Optimizer: Adam
+* Validation split: 20%
+* Dropout probability: 0.5
+
+The jungle track was trained with the following hyperparameters.
+
+* Learning rate : 0.0001
+* Number of epochers: 50
+* Optimizer: Adam
+* Validation split: 20%
+* Dropout probability: 0.5
+
+**Mean Squared Error[[MSE]](https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html?highlight=mse#mse-l2)** loss function was used to measure tranning and validation error.
+
+And also, to optimize the trainig process early stop technique was used. The model checkpints trechnique was used to save best models. To train these model optionaly parallel processing techiniques were used that are provided by Tensorflow itself.
+
+Following is the Python function for the training process.
+
+```python
+def train_model(model, X, y):
+    """
+    Training the model
+    """
+    checkpoint = keras.callbacks.ModelCheckpoint('./models/model-{epoch:03d}.h5',
+                                                 monitor='val_loss',
+                                                 verbose=2,
+                                                 save_best_only='true',
+                                                 mode='auto')
+
+    earlystop = keras.callbacks.EarlyStopping(monitor='val_loss',
+                                              mode='auto',
+                                              verbose=2,
+                                              patience=5)
+
+    model.compile(loss='mse', optimizer=tf.optimizers.Adam(learning_rate))
+    print(model.summary())
+
+    model.fit(X,
+              y,
+              epochs=epoches,
+              validation_split=0.2,
+              shuffle=True,
+              callbacks=[checkpoint, earlystop],
+              use_multiprocessing=True,
+              workers=8,
+              verbose=2)
+
+    model.save('model.h5')
+```
+
+### Testing with the Simulator
+
+The final part was the testing with Udacty simulator. It was fun and awsome by seeing how it magically happening. I have attached both lake and jungle tracks video links at the beginning of this writeup. 
+
+
+### References
+* https://www.udacity.com/course/introduction-to-computer-vision--ud810
+* https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013
+* http://cs231n.stanford.edu/
+* https://deeplearning.mit.edu/
+* https://www.freecodecamp.org/news/recognizing-traffic-lights-with-deep-learning-23dae23287cc/#.linb6gh1d
+* https://github.com/jeremy-shannon/CarND-Behavioral-Cloning-Project
+* https://developer.nvidia.com/blog/deep-learning-self-driving-cars/
+* https://github.com/naokishibuya/car-behavioral-cloning
+* https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
+* https://github.com/udacity/self-driving-car-sim
+* https://www.youtube.com/watch?v=0rsrDOXsSeM
+* https://www.youtube.com/watch?v=qFJeN9V1ZsI
+
+### Acknowledgments
+Big thank you to [Udacity](https://www.udacity.com) for providing the template code and simulator for this project.
