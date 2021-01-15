@@ -14,7 +14,7 @@ The goal of the project is to build a ML model to simulate a car to run in a aut
 * Traning Data Preparation
 * Building the Model Architecture
 * Training the Model
-* Testing with Simulator
+* Testing with the Simulator
 
 ### Data Preprocessing
 To undestand about these simulator generated data I used a 'Jupyter Notebook](image_utils.ipynb) and did some preliminary data precessing steps.  
@@ -247,7 +247,7 @@ def batch_generator(image_paths, steering_angles, batch_size, total_samples, is_
     
 ```
 
-To fit lake track, I geranted **51200** image data points and to fit jungle track I generated **61440** image data points. 
+To fit lake track, I geranted **51200** image data points and to fit jungle track I generated **61440** image data points. I compressed generated training data with Numpy support, that was help to save gata generating process. As a bottleneck I had to used inmemory dataset and my PC was supported to handle that much of dataset. Otherthan that I tried with Python generators to feed training and validation data, unfortunately that was started to  running infitely and I swiched to inmemory option :(. 
 
 ### Build Model Architecture
 This CNN architecture was implemented based on [`NVIDIA paper`](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf). Following is the original architecture diagram.
@@ -343,4 +343,24 @@ def train_model(model, X, y):
     model.save('model.h5')
 ```
 
+### Testing with the Simulator
 
+The final part was the testing with Udacty simulator. It was fun and awsome by seeing how it magically happening. I have attached both lake and jungle tracks video links at the beginning of this writeup. 
+
+
+### References
+* https://www.udacity.com/course/introduction-to-computer-vision--ud810
+* https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013
+* http://cs231n.stanford.edu/
+* https://deeplearning.mit.edu/
+* https://www.freecodecamp.org/news/recognizing-traffic-lights-with-deep-learning-23dae23287cc/#.linb6gh1d
+* https://github.com/jeremy-shannon/CarND-Behavioral-Cloning-Project
+* https://developer.nvidia.com/blog/deep-learning-self-driving-cars/
+* https://github.com/naokishibuya/car-behavioral-cloning
+* https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf
+* https://github.com/udacity/self-driving-car-sim
+* https://www.youtube.com/watch?v=0rsrDOXsSeM
+* https://www.youtube.com/watch?v=qFJeN9V1ZsI
+
+### Acknowledgments
+Big thank you to [Udacity](https://www.udacity.com) for providing the template code and simulator for this project.
