@@ -209,7 +209,7 @@ Following is the sample augmented image.
 ![](resources/augmented.png) 
 
 
-### Traning Data Preparation
+### Training Data Preparation
 I have generated training data before starting the training process and saved as Numpy compressed files using [`np.savez_compresse`](https://numpy.org/doc/stable/reference/generated/numpy.savez_compressed.html). Following function was used to generate tranning data set.
 
 ```python
